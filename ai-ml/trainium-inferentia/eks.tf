@@ -116,11 +116,13 @@ module "eks" {
       max_size     = 8
       desired_size = 3
 
-      instance_types = ["m5.xlarge"]
+      instance_types = ["m5.2xlarge"]
 
       labels = {
         WorkerType    = "ON_DEMAND"
         NodeGroupType = "core"
+        provisioner   = "default"
+        workload      = "rayhead"
       }
 
       tags = merge(local.tags, {
@@ -497,7 +499,7 @@ module "eks" {
       # aws ssm get-parameters --names /aws/service/eks/optimized-ami/1.27/amazon-linux-2-gpu/recommended/image_id --region us-west-2
       # ami_id   = "ami-0e0deb7ae582f6fe9" # Use this to pass custom AMI ID and ignore ami_type
       ami_type       = "AL2_x86_64_GPU"
-      capacity_type  = "SPOT"
+      capacity_type  = "ON_DEMAND"
       instance_types = ["inf2.24xlarge"]
 
       pre_bootstrap_user_data = <<-EOT
@@ -512,7 +514,7 @@ module "eks" {
 
       labels = {
         instance-type = "inf2"
-        provisioner   = "cluster-autoscaler"
+        provisioner   = "inferentia-inf2"
       }
 
       taints = [
@@ -545,8 +547,18 @@ module "eks" {
       # aws ssm get-parameters --names /aws/service/eks/optimized-ami/1.27/amazon-linux-2-gpu/recommended/image_id --region us-west-2
       # ami_id   = "ami-0e0deb7ae582f6fe9" # Use this to pass custom AMI ID and ignore ami_type
       ami_type       = "AL2_x86_64_GPU"
-      capacity_type  = "SPOT"
+      capacity_type  = "ON_DEMAND"
       instance_types = ["inf2.48xlarge"]
+
+      block_device_mappings = {
+        xvda = {
+          device_name = "/dev/xvda"
+          ebs = {
+            volume_size = 1024
+            volume_type = "gp3"
+          }
+        }
+      }
 
       pre_bootstrap_user_data = <<-EOT
         # Install Neuron monitoring tools
@@ -560,7 +572,7 @@ module "eks" {
 
       labels = {
         instance-type = "inf2-48xl"
-        provisioner   = "cluster-autoscaler"
+        provisioner   = "inferentia-inf2"
       }
 
       taints = [

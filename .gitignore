@@ -49,3 +49,7 @@ site
 
 # Checks
 .tfsec
+
+# venv
+**/.venv/*
+ai-ml/trainium-inferentia/examples/gradio-ui/gradio_cached_examples/*

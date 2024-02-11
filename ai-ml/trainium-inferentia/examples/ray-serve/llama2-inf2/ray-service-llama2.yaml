@@ -92,16 +92,16 @@ spec:
             nodeSelector:
               provisioner: inferentia-inf2
             tolerations:
-              - key: aws.amazon.com/neuroncore
-                operator: Exists
-                effect: NoSchedule
-              - key: aws.amazon.com/neuron
-                operator: Exists
-                effect: NoSchedule
-              - key: "hub.jupyter.org/dedicated"
-                operator: "Equal"
-                value: "user"
-                effect: "NoSchedule"
+            - key: "aws.amazon.com/neuroncore"
+              operator: "Exists"
+              effect: "NoSchedule"
+            - key: "aws.amazon.com/neuron"
+              operator: "Exists"
+              effect: "NoSchedule"
+            - key: "hub.jupyter.org/dedicated"
+              operator: "Equal"
+              value: "user"
+              effect: "NoSchedule"
 
 
 ---
