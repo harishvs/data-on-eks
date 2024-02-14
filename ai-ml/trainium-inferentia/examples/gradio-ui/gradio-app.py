@@ -7,9 +7,48 @@ model_endpoint = "/infer"
 service_name = "http://localhost:8000"  # Replace with your actual service name
 
 
+SYSTEM_PROMPT = """<s>[INST] <<SYS>>
+You are a helpful ecommerce assistant for Any toy company. You help customers with routine queries 
+and help find products. You will be truthful and if you don't know
+the answer you will say "I dont know, can i transfer you to a human assistant?" If they ask you anything other than 
+toys or Any toy company procedures, Say i dont know, can i transfer you to a human
+<</SYS>>
+"""
+
+# Formatting function for message and history
+def format_message(message: str, history: list, memory_limit: int = 3) -> str:
+    """
+    Formats the message and history for the Llama model.
+
+    Parameters:
+        message (str): Current message to send.
+        history (list): Past conversation history.
+        memory_limit (int): Limit on how many past interactions to consider.
+
+    Returns:
+        str: Formatted message string
+    """
+    # always keep len(history) <= memory_limit
+    if len(history) > memory_limit:
+        history = history[-memory_limit:]
+
+    if len(history) == 0:
+        return SYSTEM_PROMPT + f"{message} [/INST]"
+
+    formatted_message = SYSTEM_PROMPT + f"{history[0][0]} [/INST] {history[0][1]} </s>"
+
+    # Handle conversation history
+    for user_msg, model_answer in history[1:]:
+        formatted_message += f"<s>[INST] {user_msg} [/INST] {model_answer} </s>"
+
+    # Handle the current message
+    formatted_message += f"<s>[INST] {message} [/INST]"
+
+    return formatted_message
+
 # Function to generate text
 def text_generation(message, history):
-    prompt = message
+    prompt = format_message(message, history,4)
 
     # Create the URL for the inference
     url = f"{service_name}{model_endpoint}"
@@ -18,13 +57,16 @@ def text_generation(message, history):
         # Send the request to the model service
         response = requests.get(url, params={"sentence": prompt}, timeout=180)
         response.raise_for_status()  # Raise an exception for HTTP errors
-
-        full_output = response.text
-        # Removing the original question from the output
-        answer_only = full_output.replace(prompt, "", 1).strip('["]?\n')
-
+        generated_text = response.text        
+        generated_text = generated_text.replace('["', "")
+        generated_text = generated_text.replace('"]', "")
+        print("generated_text", len(generated_text))   
+        print("prompt", len(prompt))     
+        generated_text = generated_text[len(prompt):]
         # Safety filter to remove harmful or inappropriate content
-        answer_only = filter_harmful_content(answer_only)
+        answer_only = filter_harmful_content(generated_text)
+        answer_only = bytes(answer_only, "utf-8").decode("unicode_escape")      
+        print(answer_only)
         return answer_only
     except requests.exceptions.RequestException as e:
         # Handle any request exceptions (e.g., connection errors)
@@ -42,12 +84,11 @@ def filter_harmful_content(text):
 # Define the Gradio ChatInterface
 chat_interface = gr.ChatInterface(
     text_generation,
-    chatbot=gr.Chatbot(line_breaks=True),
     textbox=gr.Textbox(placeholder="Ask me a question", container=False, scale=7),
-    title="Llama2 AI Chat",
+    title="Any toy company",
     description="Ask me any question",
     theme="soft",
-    examples=["How many languages are in India", "What is Generative AI?"],
+    examples=["Show me some sling shots?"],
     cache_examples=True,
     retry_btn=None,
     undo_btn="Delete Previous",

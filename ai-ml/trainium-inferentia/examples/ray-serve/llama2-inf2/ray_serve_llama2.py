@@ -7,10 +7,9 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 app = FastAPI()
 
 # Define the Llama model and related parameters
-llm_model = "NousResearch/Llama-2-13b-chat-hf"
-llm_model_split = "llama-2-13b-chat-hf-split"
+llm_model = "meta-llama/Llama-2-70b-chat-hf"
+llm_model_split = "llama-2-70b-chat-hf-split"
 neuron_cores = 24  # inf2.24xlarge 6 Neurons (12 Neuron cores) and inf2.48xlarge 12 Neurons (24 Neuron cores)
-
 
 # Define the APIIngress class responsible for handling inference requests
 @serve.deployment(num_replicas=1)
