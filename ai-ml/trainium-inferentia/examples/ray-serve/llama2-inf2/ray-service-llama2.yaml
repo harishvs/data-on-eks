@@ -16,7 +16,7 @@ spec:
   serveConfig:
     importPath: ray_serve_llama2:entrypoint  # Specify the correct path to your Python script
     runtimeEnv: |
-      env_vars: {"MODEL_ID": "meta-llama/Llama-2-70b-chat-hf"}  # Replace with the appropriate model ID
+      env_vars: {"MODEL_ID": "meta-llama/Llama-2-7b-chat-hf"}  # Replace with the appropriate model ID
 
   rayClusterConfig:
     rayVersion: '2.7.1'

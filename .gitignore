@@ -53,3 +53,8 @@ site
 # venv
 **/.venv/*
 ai-ml/trainium-inferentia/examples/gradio-ui/gradio_cached_examples/*
+ai-ml/trainium-inferentia/examples/gradio-ui/test.py
+ai-ml/trainium-inferentia/examples/gradio-ui/__pycache__/fast_api_llm.cpython-311.pyc
+ai-ml/trainium-inferentia/examples/gradio-ui/__pycache__/load_files.cpython-311.pyc
+ai-ml/trainium-inferentia/examples/gradio-ui/faiss/index.faiss
+ai-ml/trainium-inferentia/examples/gradio-ui/faiss/index.pkl
