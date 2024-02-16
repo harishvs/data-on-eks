@@ -117,8 +117,8 @@ if user_input:
                 answer_index = i
                 break
         if answer_index is not None:
-            if answer_index < len(lines)-1:                
-                generated_text = "\n".join(lines[answer_index:])
+            if answer_index+1 < len(lines)-1:                
+                generated_text = "\n".join(lines[answer_index+1:])
             else:
                 generated_text = "Shall i transfer to a human"
     st.session_state.past.append(user_input)
