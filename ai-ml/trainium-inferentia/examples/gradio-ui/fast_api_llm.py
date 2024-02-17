@@ -3,6 +3,7 @@ from typing import Any, List, Mapping, Optional
 from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models.llms import LLM
 import requests
+import re
 
 class AnyFastAPILlm(LLM):
     end_point: str
@@ -22,7 +23,27 @@ class AnyFastAPILlm(LLM):
             raise ValueError("stop kwargs are not permitted.")
         response = requests.get(self.end_point, params={"sentence": prompt}, timeout=180)
         response.raise_for_status()
-        return response.text
+        print('before*********',response)
+        response = bytes(response.text, "utf-8").decode("unicode_escape")
+        print('after**********',response)
+        generated_text = response.replace('["', "")
+        generated_text = generated_text.replace('"]', "")
+        # add the input and response to session state
+        
+        lines = generated_text.splitlines()
+        # print(lines)
+        answer_index = None
+        for i,line in enumerate(lines):
+            # print(i,".",line.strip())
+            if re.search(r"Answer:",line.strip()):
+                answer_index = i
+                break
+        if answer_index is not None:
+            if answer_index < len(lines)-1:                
+                generated_text = "\n".join(lines[answer_index:])
+            else:
+                generated_text = "Shall i transfer to a human"
+        return generated_text
 
     @property
     def _identifying_params(self) -> Mapping[str, Any]:
