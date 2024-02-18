@@ -1,7 +1,7 @@
 import gradio as gr
 import requests
-import sys
-import re
+from load_files import load_text_to_vectordb,load_vector_store
+
 
 # Constants for model endpoint and service name
 model_endpoint = "/infer"
@@ -11,16 +11,18 @@ service_name = "http://localhost:8000"  # Replace with your actual service name
 
 SYSTEM_PROMPT = """<s>[INST] <<SYS>>
 You are a helpful ecommerce assistant for Any toy company. You help customers with routine queries 
-and help find products. You will be truthful and if you don't know
+and help find products based on information on context. You will be truthful and if you don't know
 the answer you will say "I dont know, can i transfer you to a human assistant?" If they ask you anything other than 
 toys or Any toy company procedures, Say i dont know, can i transfer you to a human.
 Don't Use emoticons.
 Don't discuss politics or relegion.
+context:
+{q_context}
 <</SYS>>
 """
 
 # Formatting function for message and history
-def format_message(message: str, history: list,context: str, memory_limit: int = 3) -> str:
+def format_message(message: str, history: list, memory_limit: int = 3) -> str:
     """
     Formats the message and history for the Llama model.
 
@@ -35,25 +37,30 @@ def format_message(message: str, history: list,context: str, memory_limit: int =
     # always keep len(history) <= memory_limit
     if len(history) > memory_limit:
         history = history[-memory_limit:]
-
+        
+    db = load_vector_store()
+    retriever = db.as_retriever(search_kwargs={'k': 2})
+    q_context = retriever.get_relevant_documents(message)
+    # print(q_context)
+  
     if len(history) == 0:
-        return SYSTEM_PROMPT + f"{message} [/INST]"
+        return SYSTEM_PROMPT.format(q_context=q_context) + f"{message} [/INST]"
 
-    formatted_message = SYSTEM_PROMPT + f"{history[0][0]} [/INST] {history[0][1]} </s>"
+    formatted_message = SYSTEM_PROMPT.format(q_context=q_context) + f"{history[0][0]} [/INST] {history[0][1]} </s>"
 
     # Handle conversation history
     for user_msg, model_answer in history[1:]:
         formatted_message += f"<s>[INST] {user_msg} [/INST] {model_answer} </s>"
 
     # Handle the current message
-    formatted_message += f"<s>[INST] {message} [/INST]"
+    formatted_message += f"<s>[INST] {message}  [/INST]"
 
     return formatted_message
 
 # Function to generate text
 def text_generation(message, history):
     prompt = format_message(message, history,4)
-    # print(prompt)
+    print(prompt)
     # Create the URL for the inference
     url = f"{service_name}{model_endpoint}"
 
@@ -64,7 +71,7 @@ def text_generation(message, history):
         generated_text = bytes(response.text,"utf-8").decode('unicode_escape')
         generated_text = generated_text.replace('["', "")
         generated_text = generated_text.replace('"]', "")  
-        print(generated_text)
+        # print(generated_text)
         answer_only = filter_harmful_content(generated_text)
         return format_output(answer_only.strip())
     except requests.exceptions.RequestException as e:
@@ -102,5 +109,11 @@ chat_interface = gr.ChatInterface(
     clear_btn="Clear",
 )
 
-# Launch the ChatInterface
-chat_interface.launch()
+def main():
+    # Launch the ChatInterface
+    chat_interface.launch()
+
+if __name__ == '__main__':
+    load_text_to_vectordb()
+    print('---------------loaded text-------------')
+    main()
