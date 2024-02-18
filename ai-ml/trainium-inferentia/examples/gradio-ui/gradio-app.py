@@ -1,5 +1,7 @@
 import gradio as gr
 import requests
+import sys
+import re
 
 # Constants for model endpoint and service name
 model_endpoint = "/infer"
@@ -11,12 +13,13 @@ SYSTEM_PROMPT = """<s>[INST] <<SYS>>
 You are a helpful ecommerce assistant for Any toy company. You help customers with routine queries 
 and help find products. You will be truthful and if you don't know
 the answer you will say "I dont know, can i transfer you to a human assistant?" If they ask you anything other than 
-toys or Any toy company procedures, Say i dont know, can i transfer you to a human
+toys or Any toy company procedures, Say i dont know, can i transfer you to a human.
+Don't Use emoticons.
 <</SYS>>
 """
 
 # Formatting function for message and history
-def format_message(message: str, history: list, memory_limit: int = 3) -> str:
+def format_message(message: str, history: list,context: str, memory_limit: int = 3) -> str:
     """
     Formats the message and history for the Llama model.
 
@@ -49,7 +52,7 @@ def format_message(message: str, history: list, memory_limit: int = 3) -> str:
 # Function to generate text
 def text_generation(message, history):
     prompt = format_message(message, history,4)
-
+    # print(prompt)
     # Create the URL for the inference
     url = f"{service_name}{model_endpoint}"
 
@@ -57,21 +60,24 @@ def text_generation(message, history):
         # Send the request to the model service
         response = requests.get(url, params={"sentence": prompt}, timeout=180)
         response.raise_for_status()  # Raise an exception for HTTP errors
-        generated_text = response.text        
+        generated_text = bytes(response.text,"utf-8").decode('unicode_escape')
         generated_text = generated_text.replace('["', "")
-        generated_text = generated_text.replace('"]', "")
-        print("generated_text", len(generated_text))   
-        print("prompt", len(prompt))     
-        generated_text = generated_text[len(prompt):]
-        # Safety filter to remove harmful or inappropriate content
+        generated_text = generated_text.replace('"]', "")  
+        print(generated_text)
         answer_only = filter_harmful_content(generated_text)
-        answer_only = bytes(answer_only, "utf-8").decode("unicode_escape")      
-        print(answer_only)
-        return answer_only
+        return format_output(answer_only.strip())
     except requests.exceptions.RequestException as e:
         # Handle any request exceptions (e.g., connection errors)
         return f"AI: Error: {str(e)}"
 
+def format_output(output):
+    str_to_find = "[/INST]"
+    last_inst_index = output.rfind(str_to_find)
+    print("last_inst_index", last_inst_index)
+    if last_inst_index == -1:
+        return output
+    else:
+        return output[last_inst_index+len(str_to_find):]
 
 # Define the safety filter function (you can implement this as needed)
 def filter_harmful_content(text):

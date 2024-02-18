@@ -21,16 +21,16 @@ class AnyFastAPILlm(LLM):
     ) -> str:
         if stop is not None:
             raise ValueError("stop kwargs are not permitted.")
+        print("prompt",prompt)
         response = requests.get(self.end_point, params={"sentence": prompt}, timeout=180)
         response.raise_for_status()
-        print('before*********',response)
         response = bytes(response.text, "utf-8").decode("unicode_escape")
-        print('after**********',response)
         generated_text = response.replace('["', "")
         generated_text = generated_text.replace('"]', "")
         # add the input and response to session state
         
         lines = generated_text.splitlines()
+        # print("lines")
         # print(lines)
         answer_index = None
         for i,line in enumerate(lines):

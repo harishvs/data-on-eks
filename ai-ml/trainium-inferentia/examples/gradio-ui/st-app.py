@@ -30,7 +30,8 @@ def create_prompt_template():
     You help customers with routine queries and help find products. 
     Please use respectful language and no icons.
     Please don't respond to questions about politics or religion.
-
+    History: 
+    {chat_history}
     Context: 
     {context}
     
@@ -42,7 +43,7 @@ def create_prompt_template():
 
     prompt = PromptTemplate(
         template=template,
-        input_variables=['context', 'question'])
+        input_variables=['context', 'question', 'chat_history'])
     return prompt
 
 def create_qa_chain(memory):
@@ -58,12 +59,13 @@ def create_qa_chain(memory):
     retriever = db.as_retriever(search_kwargs={'k': 2})
     qa_chain = ConversationalRetrievalChain.from_llm(llm=llm,chain_type='stuff',
                                               retriever=retriever,
-                                            #   combine_docs_chain_kwargs={"prompt": prompt},
+                                              combine_docs_chain_kwargs={"prompt": prompt},
                                               memory=memory)
     
     return qa_chain
 
 def conversation_chat(query,chain):
+    print(st.session_state['history'])
     result = chain({"question": query, "chat_history": st.session_state['history']})
     st.session_state['history'].append((query, result["answer"]))
     return result["answer"]
