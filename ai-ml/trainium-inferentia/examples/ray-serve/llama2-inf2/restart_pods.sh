@@ -1,0 +1,1 @@
+kubectl delete -f ray-service-llama2.yaml --force --grace-period=0 && kubectl apply -f ray-service-llama2.yaml

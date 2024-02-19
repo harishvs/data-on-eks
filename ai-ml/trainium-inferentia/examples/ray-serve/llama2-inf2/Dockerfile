@@ -24,7 +24,13 @@ USER $USER
 
 # Set pip repository pointing to the Neuron repository and install required Python packages
 RUN pip config set global.extra-index-url https://pip.repos.neuron.amazonaws.com && \
-    pip install wget awscli regex neuronx-cc==2.* torch-neuronx torchvision transformers-neuronx sentencepiece transformers
+    pip install transformers==4.34.1 && \
+    pip install transformers-neuronx==0.7.84 && \
+    pip install neuronx-cc==2.10.0.35+3817a0c8c && \
+    pip install torchvision==0.14.1 && \
+    pip install transformers-neuronx==0.7.84 && \
+    pip install torch-neuronx==1.13.1.1.11.0 && \
+    pip install wget awscli regex sentencepiece
 
 # Add Neuron path to PATH
 ENV PATH /opt/aws/neuron/bin:$PATH

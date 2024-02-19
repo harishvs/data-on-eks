@@ -16,7 +16,7 @@ spec:
   serveConfig:
     importPath: ray_serve_llama2:entrypoint  # Specify the correct path to your Python script
     runtimeEnv: |
-      env_vars: {"MODEL_ID": "meta-llama/Llama-2-7b-chat-hf"}  # Replace with the appropriate model ID
+      env_vars: {"MODEL_ID": "NousResearch/Llama-2-7b-chat-hf"}  # Replace with the appropriate model ID
 
   rayClusterConfig:
     rayVersion: '2.7.1'
@@ -32,7 +32,7 @@ spec:
         spec:
           containers:
             - name: ray-head
-              image: public.ecr.aws/data-on-eks/ray-serve-inf2-llama2:latest # Image created using the Dockerfile attached in the folder
+              image: 043632497353.dkr.ecr.us-west-2.amazonaws.com/ray-serve-inf2-llama2-ab3-harish:latest # Image created using the Dockerfile attached in the folder
               imagePullPolicy: Always # Ensure the image is always pulled when updated
               lifecycle:
                 preStop:
@@ -74,7 +74,7 @@ spec:
           spec:
             containers:
               - name: ray-worker
-                image: public.ecr.aws/data-on-eks/ray-serve-inf2-llama2:latest
+                image: 043632497353.dkr.ecr.us-west-2.amazonaws.com/ray-serve-inf2-llama2-ab3-harish:latest
                 imagePullPolicy: Always # Ensure the image is always pulled when updated
                 lifecycle:
                   preStop:

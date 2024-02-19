@@ -4,7 +4,7 @@ from load_files import load_text_to_vectordb,load_vector_store
 
 
 # Constants for model endpoint and service name
-model_endpoint = "/infer"
+model_endpoint = "/predict"
 # service_name = "http://<REPLACE_ME_WITH_ELB_DNS_NAME>/serve"
 service_name = "http://localhost:8000"  # Replace with your actual service name
 
@@ -66,7 +66,9 @@ def text_generation(message, history):
 
     try:
         # Send the request to the model service
-        response = requests.get(url, params={"sentence": prompt}, timeout=180)
+        # response = requests.get(url, params={"sentence": prompt}, timeout=180)
+        input_json = {'sentence': prompt}
+        response = requests.post(url, json=input_json, timeout=180)
         response.raise_for_status()  # Raise an exception for HTTP errors
         generated_text = bytes(response.text,"utf-8").decode('unicode_escape')
         generated_text = generated_text.replace('["', "")
