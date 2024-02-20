@@ -39,7 +39,7 @@ def format_message(message: str, history: list, memory_limit: int = 3) -> str:
         history = history[-memory_limit:]
         
     db = load_vector_store()
-    retriever = db.as_retriever(search_kwargs={'k': 2})
+    retriever = db.as_retriever(search_kwargs={'k': 5})
     q_context = retriever.get_relevant_documents(message)
     # print(q_context)
   
