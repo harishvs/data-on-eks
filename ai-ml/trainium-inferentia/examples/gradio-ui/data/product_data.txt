@@ -1,18 +1,29 @@
-DJI Mavic Air 2: This is a high-end drone that offers a 48MP camera,Costs $799, 3-axis gimbal stabilization, and can shoot 8K video. It has a max flight time of 34 minutes and a range of 8 miles.
-DJI Mini 2: This is a compact and lightweight drone, Costs $499, that offers a 12MP camera, 3-axis gimbal stabilization, and can shoot 4K video. It has a max flight time of 31 minutes and a range of 4 miles.
-DJI Spark: This is an entry-level drone that offers a 12MP camera,Costs $399, 2-axis gimbal stabilization, and can shoot 1080p video. It has a max flight time of 16 minutes and a range of 1.2 miles.
-DJI Phantom 4 Pro: This is a professional-grade drone that offers a 20MP camera,Costs $1499, 3-axis gimbal stabilization, and can shoot 4K video. It has a max flight time of 30 minutes and a range of 4 miles.
-DJI Inspire 2: This is a high-end drone that offers a 55MP camera,Costs $2999, 3-axis gimbal stabilization, and can shoot 5.2K video. It has a max flight time of 27 minutes and a range of 4 miles.
-DJI Matrice 210: This is a heavy-duty drone designed for industrial use,Costs $2999, with a 12MP camera, 3-axis gimbal stabilization, and can shoot 4K video. It has a max flight time of 31 minutes and a range of 4 miles.
-DJI Osmo Action 2: This is a handheld camera that can also be used as a drone,Costs $399, offering a 12MP camera, 3-axis gimbal stabilization, and can shoot 4K video. It has a max flight time of 20 minutes and a range of 1.2 miles.
-Barbie Fashion Model Collection: Costs 30$, This line features a wide range of fashionable dolls with different skin tones, hair textures, and outfits.
-Barbie Career Girl Collection: Costs 40$, This line features dolls dressed in professional attire, representing various careers such as a doctor, astronaut, or business executive.
-Barbie Princess Collection: Costs 45$, This line features dolls dressed in royal attire, inspired by fairytale princesses.
-Barbie Rock 'n Royals Collection: Costs 50$, This line features dolls dressed in rock-inspired outfits, with a mix of edgy and glamorous styles.
-Barbie Dreamhouse Adventures Collection: Costs 28$, This line features dolls and accessories inspired by the popular animated serieBarbie Dreamhouse Adventures.
-Barbie Vintage Collection: Costs 60$, This line features dolls with a retro aesthetic, inspired by the classBarbie dolls from the 1950s and 1960s.
-Barbie Fashionista Collection: Costs 65$, This line features a diverse range of dolls with unique body shapes, skin tones, and hairstyles, aiming to promote inclusivity and diversity.
-Barbie Dolphin Magic Collection: Costs 55$, This line features dolls dressed in mermaid-inspired outfits, with a focus on underwater adventures.
-Barbie Fairytopia Collection: Costs 100$, This line features dolls dressed in fairy-inspired outfits, with a focus on whimsical and magical themes.
-Barbie Star Light Adventure Collection: Costs 70$, This line features dolls dressed in space-inspired outfits, with a focus on intergalactic adventures.
-Barbie Star Light Adventure Collection: Costs 70$, This line features dolls dressed in space-inspired outfits, with a focus on intergalactic adventures.
+Toy Model name: Barbie Dreamhouse, year: 1962,theme: House,hair color: N/A,price: 199+ USD
+Toy Model name: Barbie Career Dolls (Doctor, Teacher, Astronaut, etc.),year: 1959-Present,theme: Various careers,hair color: Various,price: 29+ USD
+Toy Model name: Barbie Fashionistas,year: 2014-Present,theme: Diverse styles and ethnicities,hair color: Various,price: 12+ USD,
+Toy Model name: Barbie Made to Move,year: 2015-Present,theme: High articulation for posing,hair color: Various,price: 24+ USD
+Toy Model name: Barbie Signature Dolls,year: 2015-Present,theme: Designed by famous fashion designers,hair color: Various,price: 39+ USD
+Toy Model name: Barbie BMR 1959,year: 2020,theme: Modern take on the original Barbie,hair color: Various,price: 29+ USD
+Toy Model name: Barbie Mermaid Doll,year: 1990-Present,theme: Mermaid,hair color: Various,price: 19+ USD
+Toy Model name: Barbie Fairy Doll,year: 1990-Present,theme: Fairy,hair color: Various,price: 19+ USD
+Toy Model name: Barbie Princess Doll,year: 1959-Present,theme: Princess,hair color: Various,price: 19+ USD
+Toy Model name: Barbie Doll - Fashion Model,year: 1959-Present,theme: Fashion Model,hair color: Various,price: 12+ USD
+Toy Model Name: DJI Mavic 3 Cine,Weight: 1.99,Flight Time: 46,Max Distance: 9.3 miles,VideoRes: 5.1K,Price: "$4,999"
+Toy Model Name: DJI Mavic 3 Pro,Weight: 1.99,Flight Time: 46,Max Distance: 9.3 miles,VideoRes: 5.1K,Price: "$2,099"
+Toy Model Name: DJI Matrice 300 RTK,Weight: 20.5,Flight Time: 55,Max Distance: 9.3 miles,VideoRes: 5.7K,Price: "$17,999"
+Toy Model Name: DJI Mavic 3 Classic,Weight: 1.99,Flight Time: 46,Max Distance: 9.3 miles,VideoRes: 5.1K,Price: "$1,599"
+Toy Model Name: DJI Inspire 2,Weight: 9.3,Flight Time: 27,Max Distance: 4.9 miles,VideoRes: 5.2K,Price: "$3,199"
+Toy Model Name: DJI Mavic 2 Enterprise Advanced,Weight: 2,Flight Time: 31,Max Distance: 5 miles,VideoRes: 4K,Price: "$3,799"
+Toy Model Name: DJI Mavic 2 Enterprise Dual,Weight: 1.99,Flight Time: 31,Max Distance: 5 miles,VideoRes: 4K,Price: "$3,599"
+Toy Model Name: DJI Mavic 2 Pro,Weight: 1.99,Flight Time: 31,Max Distance: 5 miles,VideoRes: 4K,Price: "$1,349"
+Toy Model Name: DJI Mavic Air 2S,Weight: 1.31,Flight Time: 34,Max Distance: 7.5 miles,VideoRes: 5.4K,Price: $999
+Toy Model Name: DJI Mavic Air 3,Weight: 1.23,Flight Time: 46,Max Distance: 3 miles,Camera Sensor: "1/2"" CMOS",VideoRes: 5.1K,Price: $799
+Toy Model Name: DJI Phantom 4 Pro V2.0,Weight: 2.87,Flight Time: 30,Max Distance: 4.4 miles,VideoRes: 4K,Price: "$1,699"
+Toy Model Name: DJI Agras T30,Weight: 46.5,Flight Time: 30,Max Distance: 1.55 miles,VideoRes: N/A,Price: "$9,999"
+Toy Model Name: DJI Agras T20,Weight: 46.5,Flight Time: 15,Max Distance: 0.6 miles,VideoRes: N/A,Price: "$99"
+Toy Model Name: DJI FPV,Weight: 1.71,Flight Time: 20,Max Distance: 2.5,VideoRes: 4K,Price: $999
+Toy Model Name: DJI Mini 3 Pro,Weight: 0.55,Flight Time: 34,Max Distance: 9.3 miles,VideoRes: 4K,Price: $649
+Toy Model Name: DJI Mini 2,Weight: 0.55,Flight Time: 31,Max Distance: 3.7 miles,VideoRes: 4K,Price: $399
+Toy Model Name: DJI Spark,Weight: 0.66,Flight Time: 16,Max Distance: 0.06 miles,VideoRes: FullHD,Price: $400
+Toy Model Name: DJI Tello,Weight: 0.18,Flight Time: 13,Max Distance: 0.06 miles,VideoRes: 720p,Price: $99
+Toy Model Name: DJI Ryze Tello EDU,Weight: 0.18,Flight Time: 13,Max Distance: 0.06 miles,VideoRes: 720p,Price: $79
