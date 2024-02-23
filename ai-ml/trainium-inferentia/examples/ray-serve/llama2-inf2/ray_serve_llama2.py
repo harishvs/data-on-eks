@@ -61,13 +61,13 @@ class LlamaModel:
             llm_model, export=False, **compiler_args, **input_shapes
         )
         print(f"Harish:after LlamaForSampling.from_pretrained")
-        # self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_model)
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_model)
         print(f"Harish:after getting tokenizer")
 
     # Define the method for performing inference with the Llama model
     def infer(self, sentence: str):
         # Tokenize the input sentence and encode it
-        input_ids = self.tokenizer.encode(sentence, return_tensors="pt")
+        input_ids = self.tokenizer(sentence, return_tensors="pt")
         print(f"Harish: after encode {sentence}")
 
         # Perform inference with Neuron-optimized model
