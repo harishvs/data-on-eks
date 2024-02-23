@@ -87,7 +87,7 @@ class LlamaModel:
                          temperature=0.9,
                          top_k=50,
                          top_p=0.9)
-        return self.tokenizer.decode(outputs[0], skip_special_tokens=False)[len(sentence):]
+        return self.tokenizer.decode(outputs[0], skip_special_tokens=False)[len(sentence)-3:]
 
 
 # Create an entry point for the FastAPI application

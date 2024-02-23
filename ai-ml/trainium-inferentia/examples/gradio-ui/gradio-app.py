@@ -44,11 +44,12 @@ def format_message(message: str, history: list, memory_limit: int = 3) -> str:
         "instruction": message,
         "context": str(q_context).replace('"', "'"),
         "response": "",
+        "category": "closed_qa"
     }
     print(json.dumps(json_dict))
     print('----------')
-    for document in q_context:
-        print(str(document.page_content).encode('utf-8').decode("unicode_escape"))
+    # for document in q_context:
+    #     print(str(document.page_content).encode('utf-8').decode("unicode_escape"))
         
     instruction = f"### Instruction\n{message}"
     context = f"### Context\n{q_context}" if q_context else None
@@ -78,7 +79,7 @@ def text_generation(message, history):
         generated_text = generated_text.replace('"]', "")
         # print(generated_text)
         answer_only = filter_harmful_content(generated_text)
-        return answer_only.strip()
+        return answer_only[1:-1].strip() #take out the quotes at beginning and end
     except requests.exceptions.RequestException as e:
         # Handle any request exceptions (e.g., connection errors)
         return f"AI: Error: {str(e)}"
