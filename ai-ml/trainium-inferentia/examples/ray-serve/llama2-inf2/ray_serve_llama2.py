@@ -17,7 +17,7 @@ app = FastAPI()
 
 # Define the Llama model and related parameters
 tokenizer_model = "philschmid/Llama-2-7b-hf"
-llm_model = "harishvs/ecommerce-QA-dolly-llama2-7B-neuron"
+llm_model = "harishvs/ecommerce-QA-dolly-llama2-7B-neuron-v2"
 neuron_cores = 24  # inf2.24xlarge 6 Neurons (12 Neuron cores) and inf2.48xlarge 12 Neurons (24 Neuron cores)
 
 
