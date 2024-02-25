@@ -1,20 +1,20 @@
-Toy Model name: Barbie Dreamhouse, year: 1962,theme: House,hair color: N/A,price: 199+ USD
-Toy Model name: Barbie Career Dolls (Doctor, Teacher, Astronaut, etc.),year: 1959-Present,theme: Various careers,hair color: Various,price: 29+ USD
-Toy Model name: Barbie Fashionistas,year: 2014-Present,theme: Diverse styles and ethnicities,hair color: Various,price: 12+ USD,
-Toy Model name: Barbie Made to Move,year: 2015-Present,theme: High articulation for posing,hair color: Various,price: 24+ USD
-Toy Model name: Barbie Signature Dolls,year: 2015-Present,theme: Designed by famous fashion designers,hair color: Various,price: 39+ USD
-Toy Model name: Barbie BMR 1959,year: 2020,theme: Modern take on the original Barbie,hair color: Various,price: 29+ USD
-Toy Model name: Barbie Mermaid Doll,year: 1990-Present,theme: Mermaid,hair color: Various,price: 19+ USD
-Toy Model name: Barbie Fairy Doll,year: 1990-Present,theme: Fairy,hair color: Various,price: 19+ USD
-Toy Model name: Barbie Princess Doll,year: 1959-Present,theme: Princess,hair color: Various,price: 19+ USD
-Toy Model name: Barbie Doll - Fashion Model,year: 1959-Present,theme: Fashion Model,hair color: Various,price: 12+ USD
-Toy Model Name: DJI Mavic 3 Cine,Weight: 1.99,Flight Time: 46,Max Distance: 9.3 miles,VideoRes: 5.1K,Price: "$4,999"
-Toy Model Name: DJI Mavic 3 Pro,Weight: 1.99,Flight Time: 46,Max Distance: 9.3 miles,VideoRes: 5.1K,Price: "$2,099"
-Toy Model Name: DJI Matrice 300 RTK,Weight: 20.5,Flight Time: 55,Max Distance: 9.3 miles,VideoRes: 5.7K,Price: "$17,999"
-Toy Model Name: DJI Mavic 3 Classic,Weight: 1.99,Flight Time: 46,Max Distance: 9.3 miles,VideoRes: 5.1K,Price: "$1,599"
-Toy Model Name: DJI Inspire 2,Weight: 9.3,Flight Time: 27,Max Distance: 4.9 miles,VideoRes: 5.2K,Price: "$3,199"
-Toy Model Name: DJI Mavic 2 Enterprise Advanced,Weight: 2,Flight Time: 31,Max Distance: 5 miles,VideoRes: 4K,Price: "$3,799"
-Toy Model Name: DJI Mavic 2 Enterprise Dual,Weight: 1.99,Flight Time: 31,Max Distance: 5 miles,VideoRes: 4K,Price: "$3,599"
-Toy Model Name: DJI Mavic 2 Pro,Weight: 1.99,Flight Time: 31,Max Distance: 5 miles,VideoRes: 4K,Price: "$1,349"
-Toy Model Name: DJI Mavic Air 2S,Weight: 1.31,Flight Time: 34,Max Distance: 7.5 miles,VideoRes: 5.4K,Price: $999
-Toy Model Name: DJI Mavic Air 3,Weight: 1.23,Flight Time: 46,Max Distance: 3 miles,Camera Sensor: "1/2"" CMOS",VideoRes: 5.1K,Price: $799
+{"name": "Barbie Doll - Fashion Model","year":1959, "theme":"Fashion Model", "haircolor":"green", "price_usd":12 }
+{"name": "Barbie Fashionistas dolls","year":2014, "theme":"Diverse styles and ethnicities", "haircolor":"blue", "price_usd":12 }
+{"name": "Barbie Mermaid Dolls","year":1990, "theme":"Mermaid", "haircolor":"red", "price_usd":19 }
+{"name": "Barbie Fairy Dolls","year":1990, "theme":"Fairy", "haircolor":"green", "price_usd":19 }
+{"name": "Barbie Princess Dolls","year":1990, "theme":"Princess", "haircolor":"orange", "price_usd":19 }
+{"name": "Barbie Made to Move dolls","year":2015, "theme":"High articulation for posing", "haircolor":"yellow", "price_usd":24 }
+{"name": "Barbie Career Dolls (Doctor, Teacher, Astronaut, etc.)","year":1959, "theme":"Various careers", "haircolor":"blonde", "price_usd":29 }
+{"name": "Barbie BMR 1959 dolls","year":2020, "theme":"Modern take on the original Barbie", "haircolor":"black", "price_usd":29 }
+{"name": "Barbie Signature Dolls","year":2015, "theme":"Designed by famous fashion designers", "haircolor":"green", "price_usd":39 }
+{"name": "Barbie Dreamhouse dolls","year":1962, "theme":"House", "haircolor":"green", "price_usd":199 }
+{"name": "DJI Mavic Air 3 drone", "weight_lb":1.23,"flight_time_minutes":46,"max_distance_miles":3,"video_res_k":5.1,"price":799 }
+{"name": "DJI Mavic Air 2S drone", "weight_lb":1.31,"flight_time_minutes":34,"max_distance_miles":7.5,"video_res_k":5.4,"price":999 }
+{"name": "DJI Mavic 2 Pro drone", "weight_lb":1.99,"flight_time_minutes":31,"max_distance_miles":5,"video_res_k":4,"price":1349 }
+{"name": "DJI Mavic 3 Classic drone", "weight_lb":1.99,"flight_time_minutes":46,"max_distance_miles":9.3,"video_res_k":5.1,"price":1599 }
+{"name": "DJI Mavic 3 Pro drone", "weight_lb":1.99,"flight_time_minutes":46,"max_distance_miles":9.3,"video_res_k":5.1,"price":2099 }
+{"name": "DJI Inspire 2 drone", "weight_lb":9.3,"flight_time_minutes":27,"max_distance_miles":4.9,"video_res_k":5.2,"price":3199 }
+{"name": "DJI Mavic 2 Enterprise Dual drone", "weight_lb":1.99,"flight_time_minutes":31,"max_distance_miles":5,"video_res_k":4,"price":3599 }
+{"name": "DJI Mavic 2 Enterprise Advanced drone", "weight_lb":2,"flight_time_minutes":31,"max_distance_miles":5,"video_res_k":4,"price":3799 }
+{"name": "DJI Mavic 3 Cine drone", "weight_lb":1.99,"flight_time_minutes":46,"max_distance_miles":9.3,"video_res_k":5.1,"price":4999 }
+{"name": "DJI Matrice 300 RTK drone", "weight_lb":20.5,"flight_time_minutes":55,"max_distance_miles":9.3,"video_res_k":5.7,"price":17999 }
