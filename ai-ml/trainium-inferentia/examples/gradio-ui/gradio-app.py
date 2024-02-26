@@ -123,9 +123,6 @@ def main():
     chat_interface.launch()
 
 
-if __name__ == "__main__":
-    # load_text_to_vectordb()
-    # db = load_vector_store()
-    collection = create_chroma_collections()
-    # print('---------------loaded text-------------')
-    main()
+
+collection = create_chroma_collections()
+main()
