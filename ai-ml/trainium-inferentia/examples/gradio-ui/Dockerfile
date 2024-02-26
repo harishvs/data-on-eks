@@ -8,4 +8,4 @@ COPY chroma_utils.py /usr/src/chatbot/chroma_utils.py
 COPY gradio-app.py /usr/src/chatbot/gradio-app.py
 COPY load_files.py /usr/src/chatbot/load_files.py
 COPY data/*  /usr/src/chatbot/data/
-CMD ["uvicorn", "--host", "0.0.0.0", "--port", "7860", "app:app"]
+CMD ["uvicorn", "--host", "0.0.0.0", "--port", "7860", "gradio-app:gradio-app"]
