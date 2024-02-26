@@ -4,6 +4,8 @@ import requests
 from load_files import (
     create_chroma_collections,
 )
+from fastapi import FastAPI
+
 
 
 # Constants for model endpoint and service name
@@ -20,7 +22,6 @@ Don't discuss politics or relegion or drugs or weapons
 show emojis
 """
 
-collection = create_chroma_collections()
 
 # Formatting function for message and history
 def format_message(message: str, history: list, memory_limit: int = 3) -> str:
@@ -117,13 +118,7 @@ chat_interface = gr.ChatInterface(
     undo_btn="Delete Previous",
     clear_btn="Clear"
 )
+app = FastAPI()
+collection = create_chroma_collections()
 
-
-def main():
-    # Launch the ChatInterface
-    chat_interface.launch()
-
-
-
-
-main()
+app = gr.mount_gradio_app(app, chat_interface, '/')

@@ -33,7 +33,6 @@ spec:
     spec:
       containers:
       - name: anytoy-chatbot-container
-        # The $REPOSITORY_URI and $IMAGE_TAG placeholders will be replaced by actual values supplied by the build action in your workflow
         image: 043632497353.dkr.ecr.us-west-2.amazonaws.com/chatbot-app:latest
         ports:
         - containerPort: 7860
