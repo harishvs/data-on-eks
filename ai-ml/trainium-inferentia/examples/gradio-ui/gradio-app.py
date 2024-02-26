@@ -114,8 +114,7 @@ chat_interface = gr.ChatInterface(
     cache_examples=True,
     retry_btn=None,
     undo_btn="Delete Previous",
-    clear_btn="Clear",
-    server_name="0.0.0.0"
+    clear_btn="Clear"
 )
 
 
