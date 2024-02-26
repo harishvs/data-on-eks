@@ -41,11 +41,13 @@ def load_vector_store():
     db = FAISS.load_local("faiss", embeddings)
     return db
 
+
 def split_documents(documents):
     split_texts = []
     for document in documents:
-        split_texts.extend(document.page_content.split('\n'))
+        split_texts.extend(document.page_content.split("\n"))
     return split_texts
+
 
 def create_chroma_collections():
     loader = DirectoryLoader("data", glob="*.txt", loader_cls=TextLoader)
@@ -66,9 +68,3 @@ def create_chroma_collections():
         chroma_product_data_dict["documents"],
         chroma_product_data_dict["metadatas"],
     )
-
-    
-    
-
-if __name__ == "__main__":
-    load_text_to_vectordb()
