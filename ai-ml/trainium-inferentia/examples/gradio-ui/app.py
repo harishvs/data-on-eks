@@ -6,7 +6,8 @@ from load_files import (
 )
 from fastapi import FastAPI
 
-
+app = FastAPI()
+collection = create_chroma_collections()
 
 # Constants for model endpoint and service name
 model_endpoint = "/predict"
@@ -118,7 +119,5 @@ chat_interface = gr.ChatInterface(
     undo_btn="Delete Previous",
     clear_btn="Clear"
 )
-app = FastAPI()
-collection = create_chroma_collections()
 
 app = gr.mount_gradio_app(app, chat_interface, '/')
