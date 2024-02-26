@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: anytoy-chatbot-service
+  namespace: llama2
+  labels:
+    app: anytoy-chatbot
+spec:
+  type: LoadBalancer
+  selector:
+    app: anytoy-chatbot
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 7860
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anytoy-chatbot-deployment
+  namespace: llama2
+  labels:
+    app: anytoy-chatbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anytoy-chatbot
+  template:
+    metadata:
+      labels:
+        app: anytoy-chatbot
+    spec:
+      containers:
+      - name: anytoy-chatbot-container
+        # The $REPOSITORY_URI and $IMAGE_TAG placeholders will be replaced by actual values supplied by the build action in your workflow
+        image: 043632497353.dkr.ecr.us-west-2.amazonaws.com/chatbot-app:latest
+        ports:
+        - containerPort: 7860

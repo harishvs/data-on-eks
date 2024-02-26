@@ -8,8 +8,8 @@ from load_files import (
 
 # Constants for model endpoint and service name
 model_endpoint = "/predict"
-# service_name = "http://<REPLACE_ME_WITH_ELB_DNS_NAME>/serve"
-service_name = "http://localhost:8000"  # Replace with your actual service name
+service_name = "http://k8s-ingressn-ingressn-d5a385da81-7cb7eb31b9e9ce36.elb.us-west-2.amazonaws.com/serve"
+# service_name = "http://localhost:8000"  # Replace with your actual service name
 
 
 SYSTEM_PROMPT = """
@@ -115,6 +115,7 @@ chat_interface = gr.ChatInterface(
     retry_btn=None,
     undo_btn="Delete Previous",
     clear_btn="Clear",
+    server_name="0.0.0.0"
 )
 
 
