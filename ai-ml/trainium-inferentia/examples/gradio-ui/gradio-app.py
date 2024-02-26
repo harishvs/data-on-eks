@@ -20,6 +20,7 @@ Don't discuss politics or relegion or drugs or weapons
 show emojis
 """
 
+collection = create_chroma_collections()
 
 # Formatting function for message and history
 def format_message(message: str, history: list, memory_limit: int = 3) -> str:
@@ -124,5 +125,5 @@ def main():
 
 
 
-collection = create_chroma_collections()
+
 main()
