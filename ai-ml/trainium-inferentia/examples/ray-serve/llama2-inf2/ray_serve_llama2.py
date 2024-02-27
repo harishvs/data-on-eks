@@ -70,17 +70,6 @@ class LlamaModel:
         input_ids = self.tokenizer(sentence, return_tensors="pt")
         print(f"Harish: after encode {sentence}")
 
-        # Perform inference with Neuron-optimized model
-        # with torch.inference_mode():
-        #     generated_sequences = self.neuron_model.sample(
-        #         input_ids, sequence_length=2048, top_k=50
-        #     )
-        # Decode the generated sequences and return the results
-        # print(f"Harish: after inference {generated_sequences}")
-        # return [
-        #     self.tokenizer.decode(seq, skip_special_tokens=True)
-        #     for seq in generated_sequences
-        # ]
         outputs = self.neuron_model.generate(**input_ids,
                          max_new_tokens=512,
                          do_sample=True,

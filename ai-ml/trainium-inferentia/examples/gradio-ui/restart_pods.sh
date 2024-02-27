@@ -1,1 +1,1 @@
-kubectl delete -f deploy.yaml && kubectl apply -f deploy.yaml
+kubectl delete -f deploy.yaml --force --grace-period=0 && kubectl apply -f deploy.yaml
