@@ -48,7 +48,7 @@ def format_message(message: str, history: list, memory_limit: int = 3) -> str:
     )
     q_context=filter_results(search_results)
     q_context=str(q_context).replace('"', "'")
-    print(q_context)
+    print("context",q_context)
     instruction = f"### Instruction\n{message}"
     context = f"### Context\n{q_context}" if q_context else None
     response = f"### Answer\n"
