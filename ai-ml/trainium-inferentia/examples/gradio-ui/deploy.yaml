@@ -17,7 +17,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: anytoy-chatbot-deployment
+  name: anytoy-chatbot-deployment  
   namespace: llama2
   labels:
     app: anytoy-chatbot

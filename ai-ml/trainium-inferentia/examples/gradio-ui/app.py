@@ -17,8 +17,8 @@ service_name = "http://k8s-ingressn-ingressn-d5a385da81-7cb7eb31b9e9ce36.elb.us-
 
 SYSTEM_PROMPT = """
 You are a helpful ecommerce assistant for Anytoy company. 
-If you cannot find the answer in the context you will say "I dont know, can i transfer you to a human assistant?"
-Don't show any products that are not in context
+If you cannot find the answer in the Context you will say "I dont know, can i transfer you to a human assistant?"
+Don't show any products that are not in Context
 Don't discuss politics or relegion or drugs or weapons
 show emojis
 """
@@ -47,13 +47,7 @@ def format_message(message: str, history: list, memory_limit: int = 3) -> str:
         include=["documents", "distances", "metadatas"],
     )
     q_context=filter_results(search_results)
-    # json_dict = {
-    #     "instruction": message,
-    #     "context": str(q_context).replace('"', "'"),
-    #     "response": "",
-    #     "category": "closed_qa",
-    # }
-    # print(json.dumps(json_dict))
+    q_context=str(q_context).replace('"', "'")
     print(q_context)
     instruction = f"### Instruction\n{message}"
     context = f"### Context\n{q_context}" if q_context else None
