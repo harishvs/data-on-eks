@@ -73,7 +73,7 @@ class LlamaModel:
         outputs = self.neuron_model.generate(**input_ids,
                          max_new_tokens=512,
                          do_sample=True,
-                         temperature=0.9,
+                         temperature=0,
                          top_k=50,
                          top_p=0.9)
         return self.tokenizer.decode(outputs[0], skip_special_tokens=False)[len(sentence)-3:]
