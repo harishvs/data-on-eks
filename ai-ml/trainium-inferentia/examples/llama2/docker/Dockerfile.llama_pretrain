@@ -107,15 +107,19 @@ RUN echo "export PATH=/opt/aws/neuron/bin:\$PATH" >> /root/.bashrc \
     && echo "export TERM=screen" >> /root/.bashrc
 
 # Clone, build, and install neuronx-nemo-megatron
-RUN git clone https://github.com/aws-neuron/neuronx-nemo-megatron.git \
-    && cd neuronx-nemo-megatron \
-    && bash ./build.sh \
-    && $PIP install ./build/*.whl \
-    && $PIP install -r requirements.txt torch==1.13.1 protobuf==3.20.3 \
-    && cp ./k8s/docker/nodelist_helper.py / \
-    && cd /usr/local/lib/${PYTHON}/dist-packages/nemo/collections/nlp/data/language_modeling/megatron/ \
-    && make -C . \
-    && rm -fr /root/.cache
+RUN git clone https://github.com/aws-neuron/neuronx-nemo-megatron.git 
+
+COPY nodelist_helper.py neuronx-nemo-megatron/k8s/docker/nodelist_helper.py
+
+
+RUN cd neuronx-nemo-megatron \
+&& bash ./build.sh \
+&& $PIP install ./build/*.whl \
+&& $PIP install -r requirements.txt torch==1.13.1 protobuf==3.20.3 \
+&& cp ./k8s/docker/nodelist_helper.py / \
+&& cd /usr/local/lib/${PYTHON}/dist-packages/nemo/collections/nlp/data/language_modeling/megatron/ \
+&& make -C . \
+&& rm -fr /root/.cache
 
 # Setup git lfs (required to download RedPajama dataset and others)
 RUN git lfs install

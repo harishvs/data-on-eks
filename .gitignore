@@ -56,3 +56,4 @@ ai-ml/trainium-inferentia/examples/gradio-ui/gradio_cached_examples/*
 
 # venv
 **/.venv/*
+ai-ml/trainium-inferentia/examples/llama2/.ecr_repo_uri
