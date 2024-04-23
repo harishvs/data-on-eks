@@ -1,0 +1,37 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "autoscaling:SetInstanceHealth",
+                "autoscaling:DescribeAutoScalingInstances"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:autoscaling:us-east-2:043632497353:autoScalingGroup:9a4a16c3-091a-4e57-81e9-3d98d917f2e1:autoScalingGroupName/eks-trn1-32xl-ng1-2024042106075795280000002f-42c77fa2-5d63-4197-1d62-59e8511385af"
+        },
+        {
+            "Action": [
+                "ec2:DescribeInstances"
+            ],
+            "Effect": "Allow",
+            "Resource": "*",
+            "Condition": {
+                "ForAllValues:StringEquals": {
+                    "ec2:ResourceTag/aws:autoscaling:groupName": "eks-trn1-32xl-ng1-2024042106075795280000002f-42c77fa2-5d63-4197-1d62-59e8511385af"
+                }
+            }
+        },
+        {
+            "Action": [
+                "cloudwatch:PutMetricData"
+            ],
+            "Effect": "Allow",
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "cloudwatch:Namespace": "NeuronHealthCheck"
+                }
+            }
+        }
+    ]
+}
