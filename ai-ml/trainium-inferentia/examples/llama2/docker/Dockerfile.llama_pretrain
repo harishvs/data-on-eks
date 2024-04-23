@@ -107,12 +107,7 @@ RUN echo "export PATH=/opt/aws/neuron/bin:\$PATH" >> /root/.bashrc \
     && echo "export TERM=screen" >> /root/.bashrc
 
 # Clone, build, and install neuronx-nemo-megatron
-RUN git clone https://github.com/aws-neuron/neuronx-nemo-megatron.git 
-
-COPY nodelist_helper.py neuronx-nemo-megatron/k8s/docker/nodelist_helper.py
-
-COPY test_llama.sh neuronx-nemo-megatron/nemo/examples/nlp/language_modeling/test_llama.sh
-
+RUN git clone https://github.com/harishvs/neuronx-nemo-megatron.git 
 
 RUN cd neuronx-nemo-megatron \
 && bash ./build.sh \
