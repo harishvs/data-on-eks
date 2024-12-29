@@ -13,7 +13,7 @@ data "http" "values_operator" {
 # Install Slurm operator using Helm
 resource "helm_release" "slurm_operator" {
   name             = "slurm-operator"
-  repository       = "oci://ghcr.io/slinkyproject/charts"
+  repository       = "oci://ghcr.io/harishvs/charts"
   chart            = "slurm-operator"
   version          = "0.1.0"
   namespace        = kubernetes_namespace.slinky.metadata[0].name
@@ -44,10 +44,11 @@ data "http" "values_slurm" {
   url = "https://raw.githubusercontent.com/SlinkyProject/slurm-operator/refs/tags/v0.1.0/helm/slurm/values.yaml"
 }
 
+
 # Install Slurm using Helm
 resource "helm_release" "slurm" {
   name             = "slurm"
-  repository       = "oci://ghcr.io/slinkyproject/charts"
+  repository       = "oci://ghcr.io/harishvs/charts"
   chart            = "slurm"
   version          = "0.1.0"
   namespace        = kubernetes_namespace.slurm.metadata[0].name
@@ -62,6 +63,8 @@ resource "helm_release" "slurm" {
     name  = "controller.persistence.storageClass"
     value = "fsx"
   }
+
+ 
 
   depends_on = [
     kubernetes_namespace.slurm,
