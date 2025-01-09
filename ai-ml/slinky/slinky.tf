@@ -31,7 +31,7 @@ resource "helm_release" "slurm_operator" {
 
     set {
     name  = "image.tag"
-    value = "latest"
+    value = "3.0.0"
   }
 
 
