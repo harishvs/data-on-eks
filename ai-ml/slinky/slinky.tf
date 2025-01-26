@@ -31,7 +31,7 @@ resource "helm_release" "slurm_operator" {
 
     set {
     name  = "image.tag"
-    value = "3.0.0"
+    value = "4.0.0"
   }
 
 
@@ -50,12 +50,6 @@ resource "kubernetes_namespace" "slurm" {
   }
 }
 
-# Fetch the values.yaml content
-data "http" "values_slurm" {
-  url = "https://raw.githubusercontent.com/SlinkyProject/slurm-operator/refs/tags/v0.1.0/helm/slurm/values.yaml"
-}
-
-
 # Install Slurm using Helm
 resource "helm_release" "slurm" {
   name             = "slurm"
@@ -65,16 +59,9 @@ resource "helm_release" "slurm" {
   namespace        = kubernetes_namespace.slurm.metadata[0].name
   create_namespace = true
 
-  values = [
-    data.http.values_slurm.response_body
+ values = [
+    file("${path.module}/slurm-values.yaml")
   ]
-
-  # Configure storage class
-  set {
-    name  = "controller.persistence.storageClass"
-    value = "fsx"
-  }
-
 
   depends_on = [
     kubernetes_namespace.slurm,
