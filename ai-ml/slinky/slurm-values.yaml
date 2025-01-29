@@ -270,7 +270,7 @@ compute:
       #
       # -- (string)
       # Name of NodeSet. Must be unique.
-    - name: debug-cpu
+    - name: debug
       #
       # -- (bool)
       # Enables the NodeSet in Slurm.
@@ -311,8 +311,11 @@ compute:
       # Ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-requests-and-limits-of-pod-and-container
       resources:
         limits:
-          cpu: 1
-          memory: 1Gi
+          nvidia.com/gpu: 1
+          memory: 24Gi
+        requests:
+          nvidia.com/gpu: 1
+          memory: 24Gi
       #
       # -- (map)
       # Selector which must match a node's labels for the pod to be scheduled on that node.
@@ -417,7 +420,7 @@ compute:
       # -- (string)
       # Set Slurm node GRES.
       # Ref: https://slurm.schedmd.com/slurm.conf.html#OPT_Gres_1
-      nodeGres: ""
+      nodeGres: "gpu:4"
       #
       # -- (list)
       # Set Slurm node Features as a list(string).
@@ -435,7 +438,7 @@ compute:
       #
       # -- (string)
       # Name of Partition. Must be unique.
-    - name: cpu
+    - name: all
       #
       # -- (bool)
       # Enables the partition in Slurm.
@@ -445,7 +448,7 @@ compute:
       # NodeSets to put into this Partition by name/key.
       # NOTE: 'ALL' is a Slurm meta value to mean all nodes in the system.
       nodesets:
-        - debug-cpu
+        - ALL
       #
       # -- (string)
       # Extra Slurm partition configuration appended onto the partition line.
@@ -533,7 +536,7 @@ mariadb:
     persistence:
       enabled: false
       existingClaim: ""
-      storageClass: standard
+      storageClass: fsx
       labels: {}
       annotations: {}
       accessModes:

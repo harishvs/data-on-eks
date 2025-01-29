@@ -31,7 +31,7 @@ resource "helm_release" "slurm_operator" {
 
     set {
     name  = "image.tag"
-    value = "4.0.0"
+    value = "5.0.0"
   }
 
 
