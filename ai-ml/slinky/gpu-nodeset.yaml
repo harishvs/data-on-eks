@@ -1,0 +1,189 @@
+apiVersion: slinky.slurm.net/v1alpha1
+kind: NodeSet
+metadata:
+  name: slurm-compute-debug
+  namespace: slurm
+spec:
+  clusterName: slurm
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+  replicas: 2
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: slurm-compute-debug
+      app.kubernetes.io/name: slurmd
+  serviceName: slurm-compute
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: slurmd
+      labels:
+        app.kubernetes.io/component: compute
+        app.kubernetes.io/instance: slurm-compute-debug
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: slurmd
+        app.kubernetes.io/version: '24.05'
+        helm.sh/chart: slurm-0.1.0
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - args:
+            - '-D'
+            - '-Z'
+            - '--conf-server'
+            - slurm-controller:6817
+            - '--conf'
+            - Features=debug Gres=gpu:4 Weight=1
+          image: ghcr.io/slinkyproject/slurmd:24.05-ubuntu-24.04
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/bash
+                  - '-c'
+                  - >-
+                    scontrol update nodename=$(hostname) state=down
+                    reason=preStop && scontrol delete nodename=$(hostname);
+          name: slurmd
+          ports:
+            - containerPort: 6818
+              name: slurmd
+              protocol: TCP
+          resources:
+            limits:
+              nvidia.com/gpu: '4'
+            requests:
+              nvidia.com/gpu: '4'
+          securityContext:
+            capabilities:
+              add:
+                - BPF
+                - NET_ADMIN
+                - SYS_ADMIN
+                - SYS_NICE
+            privileged: true
+          volumeMounts:
+            - mountPath: /etc/slurm
+              name: etc-slurm
+            - mountPath: /var/run
+              name: run
+            - mountPath: /var/spool/slurmd/conf-cache/gres.conf
+              name: gres-config
+              subPath: gres.conf
+      dnsConfig:
+        searches:
+          - slurm-controller.slurm.svc.cluster.local
+          - slurm-compute.slurm.svc.cluster.local
+      initContainers:
+        - command:
+            - bash
+            - '-c'
+            - |
+              #!/usr/bin/env bash
+              # SPDX-FileCopyrightText: Copyright (C) SchedMD LLC.
+              # SPDX-License-Identifier: Apache-2.0
+              
+              set -euo pipefail
+              
+              # Assume env contains:
+              # SLURM_USER - username or UID
+              
+              function init::common() {
+                  local dir
+              
+                  dir=/var/spool/slurmd
+                  mkdir -p "$dir"
+                  chown -v "${SLURM_USER}:${SLURM_USER}" "$dir"
+                  chmod -v 700 "$dir"
+              
+                  dir=/var/spool/slurmctld
+                  mkdir -p "$dir"
+                  chown -v "${SLURM_USER}:${SLURM_USER}" "$dir"
+                  chmod -v 700 "$dir"
+              }
+
+              function init::gres() {
+                ls -al /dev
+                # GPUCOUNT=$(($(ls /dev/nvidia[0-7] | wc -l)-1))
+                GPUCOUNT=3
+                echo "NodeName=$HOSTNAME Name=gpu File=/dev/nvidia[0-$GPUCOUNT]" >> /mnt/var/slurm/conf-cache/gres.conf
+                chown -v "${SLURM_USER}:${SLURM_USER}" "/mnt/var/slurm/conf-cache/gres.conf"
+                ls -al /mnt/var/slurm/conf-cache
+                cat /mnt/var/slurm/conf-cache/gres.conf
+              }
+              
+              function init::slurm() {
+                  SLURM_MOUNT=/mnt/slurm
+                  SLURM_DIR=/mnt/etc/slurm
+              
+                  # Workaround to ephemeral volumes not supporting securityContext
+                  # https://github.com/kubernetes/kubernetes/issues/81089
+              
+                  # Copy Slurm config files, secrets, and scripts
+                  mkdir -p "$SLURM_DIR"
+                  find "${SLURM_MOUNT}" -type f -name "*.conf" -print0 | xargs -0r cp -vt "${SLURM_DIR}"
+                  find "${SLURM_MOUNT}" -type f -name "*.key" -print0 | xargs -0r cp -vt "${SLURM_DIR}"
+              
+                  # Set general permissions and ownership
+                  find "${SLURM_DIR}" -type f -print0 | xargs -0r chown -v "${SLURM_USER}:${SLURM_USER}"
+                  find "${SLURM_DIR}" -type f -name "*.conf" -print0 | xargs -0r chmod -v 644
+                  find "${SLURM_DIR}" -type f -name "*.key" -print0 | xargs -0r chmod -v 600
+              
+                  # Inject secrets into certain config files
+                  local dbd_conf="slurmdbd.conf"
+                  if [[ -f "${SLURM_MOUNT}/${dbd_conf}" ]]; then
+                      echo "Injecting secrets from environment into: ${dbd_conf}"
+                      rm -f "${SLURM_DIR}/${dbd_conf}"
+                      envsubst <"${SLURM_MOUNT}/${dbd_conf}" >"${SLURM_DIR}/${dbd_conf}"
+                      chown -v "${SLURM_USER}:${SLURM_USER}" "${SLURM_DIR}/${dbd_conf}"
+                      chmod -v 600 "${SLURM_DIR}/${dbd_conf}"
+                  fi
+              
+                  # Display Slurm directory files
+                  ls -lAF "${SLURM_DIR}"
+              }
+              
+              function main() {
+                  init::common
+                  init::gres
+                  init::slurm
+              }
+              main
+          env:
+            - name: SLURM_USER
+              value: slurm
+          image: ghcr.io/slinkyproject/slurmd:24.05-ubuntu-24.04
+          imagePullPolicy: IfNotPresent
+          name: init
+          resources: {}
+          volumeMounts:
+            - mountPath: /mnt/slurm
+              name: slurm-config
+            - mountPath: /mnt/etc/slurm
+              name: etc-slurm
+            - mountPath: /mnt/var/slurm/conf-cache
+              name: gres-config
+      tolerations:
+        - effect: NoSchedule
+          key: nvidia.com/gpu
+          operator: Equal
+          value: 'true'
+      volumes:
+        - emptyDir:
+            medium: Memory
+          name: etc-slurm
+        - emptyDir:
+            medium: Memory
+          name: gres-config
+        - emptyDir: {}
+          name: run
+        - emptyDir: {}
+          name: authsocket
+        - name: slurm-config
+          projected:
+            defaultMode: 384
+            sources:
+              - secret:
+                  name: slurm-auth-key
