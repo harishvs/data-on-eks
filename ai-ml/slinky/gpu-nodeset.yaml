@@ -35,7 +35,7 @@ spec:
             - slurm-controller:6817
             - '--conf'
             - Features=debug Gres=gpu:4 Weight=1
-          image: ghcr.io/slinkyproject/slurmd:24.05-ubuntu-24.04
+          image: public.ecr.aws/u1m6g1t5/harish/slinky-slurmd-aws-pytorch-training:1.0.0
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -154,7 +154,7 @@ spec:
           env:
             - name: SLURM_USER
               value: slurm
-          image: ghcr.io/slinkyproject/slurmd:24.05-ubuntu-24.04
+          image: public.ecr.aws/u1m6g1t5/harish/slinky-slurmd-aws-pytorch-training:1.0.0
           imagePullPolicy: IfNotPresent
           name: init
           resources: {}
