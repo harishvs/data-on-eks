@@ -72,6 +72,8 @@ spec:
             - mountPath: /var/spool/slurmd/conf-cache/gres.conf
               name: gres-config
               subPath: gres.conf
+            - name: persistent-storage
+              mountPath: /data
       dnsConfig:
         searches:
           - slurm-controller.slurm.svc.cluster.local
@@ -165,12 +167,17 @@ spec:
               name: etc-slurm
             - mountPath: /mnt/var/slurm/conf-cache
               name: gres-config
+            - name: persistent-storage
+              mountPath: /data
       tolerations:
         - effect: NoSchedule
           key: nvidia.com/gpu
           operator: Equal
           value: 'true'
       volumes:
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: fsx-static-pvc
         - emptyDir:
             medium: Memory
           name: etc-slurm

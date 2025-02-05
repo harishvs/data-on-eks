@@ -5,7 +5,7 @@ metadata:
   name: fsx-static-pv
 spec:
   capacity:
-    storage: 1000Gi
+    storage: 1200Gi
   volumeMode: Filesystem
   storageClassName: fsx
   accessModes:
