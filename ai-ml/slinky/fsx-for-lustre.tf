@@ -10,7 +10,7 @@ resource "aws_fsx_lustre_file_system" "this" {
   deployment_type             = "PERSISTENT_2"
   storage_type                = "SSD"
   per_unit_storage_throughput = "500" # 125, 250, 500, 1000
-  storage_capacity            = 2400
+  storage_capacity            = 9600
 
   subnet_ids         = [module.vpc.private_subnets[0]]
   security_group_ids = [aws_security_group.fsx.id]
