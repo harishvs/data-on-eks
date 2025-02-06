@@ -1,0 +1,210 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: slurm-controller
+  namespace: slurm
+  generation: 1
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: slurm-controller
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: slurmctld
+    app.kubernetes.io/version: '24.05'
+    helm.sh/chart: slurm-0.1.0
+  annotations:
+    meta.helm.sh/release-name: slurm
+    meta.helm.sh/release-namespace: slurm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: slurm-controller
+      app.kubernetes.io/name: slurmctld
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/instance: slurm-controller
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: slurmctld
+        app.kubernetes.io/version: '24.05'
+        helm.sh/chart: slurm-0.1.0
+      annotations:
+        kubectl.kubernetes.io/default-container: slurmctld
+    spec:
+      volumes:
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: fsx-static-pvc      
+        - name: etc-slurm
+          emptyDir:
+            medium: Memory
+        - name: run
+          emptyDir: {}
+        - name: authsocket
+          emptyDir: {}
+        - name: slurm-config
+          projected:
+            sources:
+              - configMap:
+                  name: slurm
+              - secret:
+                  name: slurm-auth-key
+              - secret:
+                  name: slurm-jwt-key
+            defaultMode: 384
+      initContainers:
+        - name: init
+          image: ghcr.io/slinkyproject/slurmctld:24.05-ubuntu-24.04
+          command:
+            - bash
+            - '-c'
+            - "#!/usr/bin/env bash\n# SPDX-FileCopyrightText: Copyright (C) SchedMD LLC.\n# SPDX-License-Identifier: Apache-2.0\n\nset -euo pipefail\n\n# Assume env contains:\n# SLURM_USER - username or UID\n\nfunction init::common() {\n\tlocal dir\n\n\tdir=/var/spool/slurmd\n\tmkdir -p \"$dir\"\n\tchown -v \"${SLURM_USER}:${SLURM_USER}\" \"$dir\"\n\tchmod -v 700 \"$dir\"\n\n\tdir=/var/spool/slurmctld\n\tmkdir -p \"$dir\"\n\tchown -v \"${SLURM_USER}:${SLURM_USER}\" \"$dir\"\n\tchmod -v 700 \"$dir\"\n}\n\nfunction init::slurm() {\n\tSLURM_MOUNT=/mnt/slurm\n\tSLURM_DIR=/mnt/etc/slurm\n\n\t# Workaround to ephemeral volumes not supporting securityContext\n\t# https://github.com/kubernetes/kubernetes/issues/81089\n\n\t# Copy Slurm config files, secrets, and scripts\n\tmkdir -p \"$SLURM_DIR\"\n\tfind \"${SLURM_MOUNT}\" -type f -name \"*.conf\" -print0 | xargs -0r cp -vt \"${SLURM_DIR}\"\n\tfind \"${SLURM_MOUNT}\" -type f -name \"*.key\" -print0 | xargs -0r cp -vt \"${SLURM_DIR}\"\n\n\t# Set general permissions and ownership\n\tfind \"${SLURM_DIR}\" -type f -print0 | xargs -0r chown -v \"${SLURM_USER}:${SLURM_USER}\"\n\tfind \"${SLURM_DIR}\" -type f -name \"*.conf\" -print0 | xargs -0r chmod -v 644\n\tfind \"${SLURM_DIR}\" -type f -name \"*.key\" -print0 | xargs -0r chmod -v 600\n\n\t# Inject secrets into certain config files\n\tlocal dbd_conf=\"slurmdbd.conf\"\n\tif [[ -f \"${SLURM_MOUNT}/${dbd_conf}\" ]]; then\n\t\techo \"Injecting secrets from environment into: ${dbd_conf}\"\n\t\trm -f \"${SLURM_DIR}/${dbd_conf}\"\n\t\tenvsubst <\"${SLURM_MOUNT}/${dbd_conf}\" >\"${SLURM_DIR}/${dbd_conf}\"\n\t\tchown -v \"${SLURM_USER}:${SLURM_USER}\" \"${SLURM_DIR}/${dbd_conf}\"\n\t\tchmod -v 600 \"${SLURM_DIR}/${dbd_conf}\"\n\tfi\n\n\t# Display Slurm directory files\n\tls -lAF \"${SLURM_DIR}\"\n}\n\nfunction main() {\n\tinit::common\n\tinit::slurm\n}\nmain\n"
+          env:
+            - name: SLURM_USER
+              value: slurm
+          resources: {}
+          volumeMounts:
+            - name: slurm-config
+              mountPath: /mnt/slurm
+            - name: etc-slurm
+              mountPath: /mnt/etc/slurm
+            - name: statesave
+              mountPath: /var/spool/slurmctld
+            - name: persistent-storage
+              mountPath: /data              
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+        - name: wait
+          image: ghcr.io/slinkyproject/slurmctld:24.05-ubuntu-24.04
+          command:
+            - bash
+            - '-c'
+            - "#!/usr/bin/env bash\n# SPDX-FileCopyrightText: Copyright (C) SchedMD LLC.\n# SPDX-License-Identifier: Apache-2.0\n\nset -euo pipefail\n\n# Assume env contains:\n# HOST - Network host\n\nDELAY=\"1s\"\n\nuntil ping -c1 \"${HOST}\"; do\n\tsleep \"${DELAY}\"\ndone\n"
+          env:
+            - name: HOST
+              value: slurm-accounting
+          resources: {}
+          volumeMounts:
+            - name: slurm-config
+              mountPath: /mnt/slurm
+            - name: etc-slurm
+              mountPath: /mnt/etc/slurm
+            - name: persistent-storage
+              mountPath: /data              
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 401
+            runAsGroup: 401
+            runAsNonRoot: true
+      containers:
+        - name: slurmctld
+          image: ghcr.io/slinkyproject/slurmctld:24.05-ubuntu-24.04
+          ports:
+            - name: slurmctld
+              containerPort: 6817
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: etc-slurm
+              mountPath: /etc/slurm
+            - name: run
+              mountPath: /var/run
+            - name: authsocket
+              mountPath: /run/slurmctld
+            - name: statesave
+              mountPath: /var/spool/slurmctld
+            - name: persistent-storage
+              mountPath: /data              
+          readinessProbe:
+            exec:
+              command:
+                - scontrol
+                - ping
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            exec:
+              command:
+                - scontrol
+                - ping
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 401
+            runAsGroup: 401
+            runAsNonRoot: true
+        - name: reconfigure
+          image: ghcr.io/slinkyproject/slurmctld:24.05-ubuntu-24.04
+          command:
+            - bash
+            - '-c'
+            - "#!/usr/bin/env bash\n# SPDX-FileCopyrightText: Copyright (C) SchedMD LLC.\n# SPDX-License-Identifier: Apache-2.0\n\nset -euo pipefail\n\n# Assume env contains:\n# SLURM_USER - username or UID\n\nSLURM_MOUNT=/mnt/slurm\nSLURM_DIR=/mnt/etc/slurm\nINTERVAL=30\nINIT_RECONFIGURE=false\n\nfunction reconfigure() {\n\tlocal rsync_cmd='rsync -vaLrzPci --delete --include=\"*.conf\" --include=\"prolog-*\" --include=\"epilog-*\" --exclude=\"*\" \"${SLURM_MOUNT}/\" \"${SLURM_DIR}\"'\n\n\tif [ -z \"$(eval \"$rsync_cmd --dry-run | grep '\\./'\")\" ] && $INIT_RECONFIGURE; then\n\t\treturn\n\tfi\n\n\t# Sync Slurm config files, ignore all other files\n\teval \"$rsync_cmd\"\n\tfind \"${SLURM_DIR}\" -type f -name \"*.conf\" -print0 | xargs -0r chown -v \"${SLURM_USER}:${SLURM_USER}\"\n\tfind \"${SLURM_DIR}\" -type f -name \"*.conf\" -print0 | xargs -0r chmod -v 644\n\tfind \"${SLURM_DIR}\" -type f -regextype posix-extended -regex \"^.*/(pro|epi)log-.*$\" -print0 | xargs -0r chown -v \"${SLURM_USER}:${SLURM_USER}\"\n\tfind \"${SLURM_DIR}\" -type f -regextype posix-extended -regex \"^.*/(pro|epi)log-.*$\" -print0 | xargs -0r chmod -v 755\n\n\t# Config files are not in expected directory `/etc/slurm`\n\texport SLURM_CONF=\"$SLURM_MOUNT/slurm.conf\"\n\n\t# Issue cluster reconfigure request\n\techo \"[$(date)] Reconfiguring Slurm\"\n\tscontrol reconfigure\n\tINIT_RECONFIGURE=true\n}\n\nfunction main() {\n\techo \"[$(date)] Start Slurm config change polling\"\n\twhile true; do\n\t\treconfigure\n\t\tsleep \"$INTERVAL\"\n\tdone\n}\nmain\n"
+          env:
+            - name: SLURM_USER
+              value: slurm
+          resources: {}
+          volumeMounts:
+            - name: slurm-config
+              mountPath: /mnt/slurm
+            - name: etc-slurm
+              mountPath: /mnt/etc/slurm
+            - name: authsocket
+              mountPath: /run/slurmctld
+            - name: persistent-storage
+              mountPath: /data              
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      automountServiceAccountToken: false
+      securityContext:
+        sysctls:
+          - name: net.ipv4.ping_group_range
+            value: 401 401
+      schedulerName: default-scheduler
+  volumeClaimTemplates:
+    - kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: statesave
+        namespace: slurm
+        labels:
+          app.kubernetes.io/component: controller
+          app.kubernetes.io/instance: slurm-controller
+          app.kubernetes.io/managed-by: Helm
+          app.kubernetes.io/name: slurmctld
+          app.kubernetes.io/version: '24.05'
+          helm.sh/chart: slurm-0.1.0
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 4Gi
+        storageClassName: fsx
+        volumeMode: Filesystem
+      status:
+        phase: Pending
+  serviceName: slurm-controller
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  revisionHistoryLimit: 0
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
